@@ -1,0 +1,20 @@
+node('main'){
+    stage('cleanup'){
+        cleanWs()
+    }
+    stage('pulling'){
+       git branch: 'main', url: 'https://github.com/mahi-302/teatime1.git'
+        sh "ls"
+    }
+    stage('lb-module'){
+         sh "terraform init"
+        sh "terraform plan"
+        sh "terraform apply -auto-approve"
+    }
+    stage('pushing data'){
+        sh "git add terraform.tfstate"
+        sh "git commit -m 'terraform'"
+        sh "git remote set-url origin https://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@github.com/mahi-302/teatime1.git"
+        sh "git push --set-upstream origin main"
+       }
+    }
